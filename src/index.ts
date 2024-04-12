@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 
 import { z } from "zod";
 import swagger from "@elysiajs/swagger";
@@ -8,15 +8,7 @@ import { db } from "./db/connection";
 const app = new Elysia().use(swagger())
 
 app.post('/user', async ({ body, set }) => {
-  const registerBodySchema = z.object({
-    name: z.string(),
-    email: z.string().email({
-      message: 'E-mail inválido'
-    }),
-    password: z.string().min(6)
-  })
-
-  const { name, email, password } = registerBodySchema.parse(body)
+  const { name, email, password } = body
 
   await db.insert(users).values({
     name,
@@ -25,6 +17,12 @@ app.post('/user', async ({ body, set }) => {
   })
 
   return set.status = 'Created'
+}, {
+  body: t.Object({
+    name: t.String(),
+    email: t.String({ format: 'email' }),
+    password: t.String()
+  })
 })
 
 app.get('/users', async () => {
