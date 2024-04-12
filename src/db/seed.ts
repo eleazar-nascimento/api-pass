@@ -18,11 +18,16 @@ console.log(chalk.yellow('✔ Database reset'))
 * Create users
 */
 
+const hash = await Bun.password.hash(faker.internet.password(), {
+  algorithm: "bcrypt",
+  cost: 4
+})
+
 const [user] = await db.insert(users).values([
   {
     name: faker.person.fullName(),
     email: faker.internet.email(),
-    password: faker.internet.password()
+    password: hash
   }
 ]).returning({
   id: users.id,
