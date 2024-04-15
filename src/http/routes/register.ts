@@ -14,7 +14,11 @@ export const register = new Elysia().error({
         message: error.message
       }
     default:
-      break;
+
+    return {
+      code,
+      message: error.message
+    }
   }
 }).post(
   'user', async ({ body, set }) => {
@@ -35,6 +39,6 @@ export const register = new Elysia().error({
     body: t.Object({
       name: t.String(),
       email: t.String({ format: 'email' }),
-      password: t.String()
+      password: t.String({ minLength: 6, error: 'Password must be contain least 6 character(s).' })
     })
   })
