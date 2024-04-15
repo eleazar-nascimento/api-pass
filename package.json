@@ -7,6 +7,7 @@
     "build": "bun build src/index.ts",
     "start": "NODE_ENV=production bun src/index.ts",
     "test": "bun test",
+    "test:watch": "bun test --watch",
     "generate": "drizzle-kit generate:pg",
     "studio": "drizzle-kit studio",
     "migrate": "bun src/db/migrate.ts",
