@@ -1,10 +1,10 @@
 import Elysia, { t } from "elysia";
 import { RegisterUseCase } from "../../use-cases/register";
-import { ConflictError } from "../errors/conflict-error";
+import { UserAlreadyExistsError } from "../errors/user-already-exists-error";
 import { DrizzleUsersRespository } from "../../repositories/drizzle/drizzle-users-repository";
 
 export const register = new Elysia().error({
-  CONFLICT: ConflictError,
+  CONFLICT: UserAlreadyExistsError,
 }).onError(({ error, code, set }) => {
   switch (code) {
     case 'CONFLICT':

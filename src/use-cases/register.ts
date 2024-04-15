@@ -1,5 +1,5 @@
 import { db } from "../db/connection"
-import { ConflictError } from "../http/errors/conflict-error"
+import { UserAlreadyExistsError } from "../http/errors/user-already-exists-error"
 import type { UsersRespository } from "../repositories/users-repository"
 
 interface RegisterRequest {
@@ -21,7 +21,7 @@ export class RegisterUseCase {
     const userWithSameEmail = await this.usersRepository.findByEmail(email)
   
     if(userWithSameEmail) {
-      throw new ConflictError()
+      throw new UserAlreadyExistsError()
     }
 
     await this.usersRepository.create({
