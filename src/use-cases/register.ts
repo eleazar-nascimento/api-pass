@@ -1,18 +1,13 @@
-import { db } from "../db/connection"
 import { UserAlreadyExistsError } from "../http/errors/user-already-exists-error"
-import type { UsersRespository } from "../repositories/users-repository"
+import type { ICreateUsersRequest, ICreateUsersResponse, UsersRespository } from "../repositories/users-repository"
 
-interface RegisterRequest {
-  name: string
-  email: string
-  password: string
+interface RegisterResponse {
+  user: ICreateUsersResponse
 }
 
 export class RegisterUseCase {
-  constructor(private usersRepository: UsersRespository) {
-    
-  }
-  async execute({ email, name, password }: RegisterRequest) {
+  constructor(private usersRepository: UsersRespository) {}
+  async execute({ email, name, password }: ICreateUsersRequest): Promise<RegisterResponse> {
     const password_hash = await Bun.password.hash(password, {
       algorithm: "bcrypt",
       cost: 4
@@ -24,10 +19,14 @@ export class RegisterUseCase {
       throw new UserAlreadyExistsError()
     }
 
-    await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       email,
       password: password_hash
     })
+
+    return {
+      user
+    }
   }
 }
