@@ -1,14 +1,19 @@
-import { describe, it, expect } from 'bun:test'
+import { describe, it, expect, beforeEach } from 'bun:test'
 import { RegisterUseCase } from './register';
 import { InMemoryUsersRespository } from '../repositories/in-memory/in-memory-users-repository';
-import { UserAlreadyExistsError } from '../http/errors/user-already-exists-error';
+
+let usersRepository: InMemoryUsersRespository
+let sut: RegisterUseCase
 
 describe('Register Use Case', () => {
-  it('should be able to register registration', async () => {
-    const usersRepository = new InMemoryUsersRespository()
-    const registerUseCase = new RegisterUseCase(usersRepository)
+  beforeEach(() => {
+    usersRepository= new InMemoryUsersRespository()
+    sut = new RegisterUseCase(usersRepository)
+  })
 
-    const { user } = await registerUseCase.execute({
+  it('should be able to register registration', async () => {
+
+    const { user } = await sut.execute({
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456'
@@ -21,19 +26,16 @@ describe('Register Use Case', () => {
   })
 
   it('should not be able to register with same email twice', async () => {
-    const usersRepository = new InMemoryUsersRespository()
-    const registerUseCase = new RegisterUseCase(usersRepository)
-
     const email = 'johndoe@example.com'
 
-    await registerUseCase.execute({
+    await sut.execute({
       name: 'John Doe',
       email,
       password: '123456'
     })
 
     expect(() => 
-      registerUseCase.execute({
+      sut.execute({
         name: 'John Doe',
         email,
         password: '123456'

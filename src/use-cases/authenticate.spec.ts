@@ -1,11 +1,17 @@
-import { describe, it, expect } from 'bun:test'
+import { describe, it, expect, beforeEach } from 'bun:test'
 import { AuthenticateUseCase } from './authenticate';
 import { InMemoryUsersRespository } from '../repositories/in-memory/in-memory-users-repository';
 
+let usersRepository: InMemoryUsersRespository
+let sut: AuthenticateUseCase
+
 describe('Authenticate Use Case', () => {
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRespository()
+    sut = new AuthenticateUseCase(usersRepository)
+  })
+
   it('should be able to authenticate', async () => {
-    const usersRepository = new InMemoryUsersRespository()
-    const sut = new AuthenticateUseCase(usersRepository)
     const password_hash = await Bun.password.hash('123456', {
       algorithm: 'bcrypt',
       cost: 4
@@ -36,8 +42,6 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not be able to authenticate with wrong password', async () => {
-    const usersRepository = new InMemoryUsersRespository()
-    const sut = new AuthenticateUseCase(usersRepository)
     const password_hash = await Bun.password.hash('123456', {
       algorithm: 'bcrypt',
       cost: 4
