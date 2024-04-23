@@ -32,9 +32,6 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not be able to authenticate with wrong e-mail', async () => {
-    const usersRepository = new InMemoryUsersRespository()
-    const sut = new AuthenticateUseCase(usersRepository)
-
     expect(() => sut.execute({
       email: 'johndoe@example.com',
       password: '123456'
