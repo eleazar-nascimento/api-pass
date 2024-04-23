@@ -1,7 +1,6 @@
 import Elysia, { t } from "elysia";
-import { RegisterUseCase } from "../../use-cases/register";
 import { UserAlreadyExistsError } from "../errors/user-already-exists-error";
-import { DrizzleUsersRespository } from "../../repositories/drizzle/drizzle-users-repository";
+import { makeRegisterUseCase } from "../../use-cases/factories/make-register-use-case";
 
 export const register = new Elysia().error({
   CONFLICT: UserAlreadyExistsError,
@@ -23,10 +22,7 @@ export const register = new Elysia().error({
 }).post(
   'user', async ({ body, set }) => {
     const { name, email, password } = body
-
-    const usersRespository = new DrizzleUsersRespository()
-  
-    const registerUseCase = new RegisterUseCase(usersRespository)
+    const registerUseCase = makeRegisterUseCase()
 
     await registerUseCase.execute({
       name,

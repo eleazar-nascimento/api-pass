@@ -2,6 +2,7 @@ import Elysia, { t } from "elysia";
 import { DrizzleUsersRespository } from "../../repositories/drizzle/drizzle-users-repository";
 import { InvalidCredentialsError } from "../errors/invalid-credentials-error";
 import { AuthenticateUseCase } from "../../use-cases/authenticate";
+import { makeAuthenticateUseCase } from "../../use-cases/factories/make-authenticate-use-case";
 
 export const authenticate = new Elysia().error({
   CONFLICT: InvalidCredentialsError,
@@ -22,10 +23,7 @@ export const authenticate = new Elysia().error({
 }).post(
   'sessions', async ({ body, set }) => {
     const { email, password } = body
-
-    const usersRespository = new DrizzleUsersRespository()
-  
-    const authenticateUseCase = new AuthenticateUseCase(usersRespository)
+    const authenticateUseCase = makeAuthenticateUseCase()
 
     await authenticateUseCase.execute({
       email,
