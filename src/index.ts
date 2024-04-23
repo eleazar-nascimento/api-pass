@@ -2,8 +2,9 @@ import { Elysia, t } from "elysia";
 import { register } from "./http/routes/register";
 import { db } from "./db/connection";
 import swagger from "@elysiajs/swagger";
+import { authenticate } from "./http/routes/authenticate";
 
-const app = new Elysia().use(register).use(swagger()).onError(({ error, code, set }) => {
+const app = new Elysia().use(register).use(authenticate).use(swagger()).onError(({ error, code, set }) => {
   switch (code) {
     case 'NOT_FOUND': {
       set.status = 404

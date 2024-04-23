@@ -8,6 +8,7 @@ export interface ICreateUsersRequest {
 
 
 export interface ICreateUsersResponse {
+  id: string
   name: string
   email: string
   password: string
