@@ -1,7 +1,6 @@
 import Elysia, { NotFoundError, t } from "elysia";
 import { db } from "../../db/connection";
-import { authLinks, users } from "../../db/schema";
-import { eq } from "drizzle-orm";
+import { authLinks } from "../../db/schema";
 import { createId } from "@paralleldrive/cuid2";
 import { env } from "../../env";
 
